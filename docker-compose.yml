@@ -1,0 +1,50 @@
+version: "2"
+
+services:
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.9
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - jarapp
+  kafka:
+    image: docker.io/bitnami/kafka:3.4
+    ports:
+        - "9092:9092"
+    volumes:
+        - "kafka_data:/bitnami"
+    environment:
+        - KAFKA_LISTENERS=PLAINTEXT://:9092
+        - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+        - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+        - zookeeper
+    networks:
+        - jarapp
+  mysql:
+    image: mysql:8.0.35
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: docker_cloud
+      MYSQL_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker_cloud.sql:/docker-entrypoint-initdb.d/docker_cloud.sql
+      # You can add a volume to persist MySQL data if needed:
+      # - mysql_data:/var/lib/mysql
+    networks:
+      - jarapp
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+networks:
+  jarapp:
