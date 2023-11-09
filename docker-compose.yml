@@ -18,11 +18,10 @@ services:
     volumes:
         - "kafka_data:/bitnami"
     environment:
-        - KAFKA_LISTENERS=PLAINTEXT://:9092
+        - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
         - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://:9092
         - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
         - ALLOW_PLAINTEXT_LISTENER=yes
-        - KAFKA_ADVERTISED_HOST_NAME=kafka
     depends_on:
         - zookeeper
     networks:
@@ -51,6 +50,7 @@ services:
     environment:
       KAFKA_HOST: kafka #kafka-ip
       MYSQL_HOST: mysql #mysql-ip
+      DOCKER_HOST: tcp://host.docker.internal:2375 #docker母机连接信息
       
 volumes:
   zookeeper_data:
@@ -59,4 +59,3 @@ volumes:
     driver: local
 networks:
   jarapp:
-    external: true
