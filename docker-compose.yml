@@ -39,7 +39,7 @@ services:
     networks:
       - jarapp
   myapp:
-    image: dockerxylyjy/docker:1.0.1
+    image: dockerxylyjy/docker:1.0.2
     ports:
       - "8888:8888"
     networks:
